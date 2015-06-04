@@ -5,24 +5,28 @@ include_once "../vendor/autoload.php";
 
 // Import the necessary classes
 use Aura\Session\SessionFactory;
-use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 use Philo\Blade\Blade;
+use RandomLib\Factory as PasswordFactory;
 
-$generator = new ComputerPasswordGenerator();
-
-$views = __DIR__ . '../../views';
-$cache = __DIR__ . '../../cache';
-
-$blade = new Blade($views, $cache);
-
+//manage session
 $session_factory = new SessionFactory;
 $session = $session_factory->newInstance($_COOKIE);
-
 $segment = $session->getSegment('oval/signup');
+
+//manage password generation
+$factory = new PasswordFactory;
+$generator = $factory->getGenerator(new SecurityLib\Strength(SecurityLib\Strength::MEDIUM));
+$pasword_characters = 'abcdefghijklmnopqrstuvwxyz';
+
+//front-end view
+$views = __DIR__ . '../../views';
+$cache = __DIR__ . '../../cache';
+$blade = new Blade($views, $cache);
 
 $form_data = array(
 	'phone-number' => '',
 );
+
 $err = array();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -37,13 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			//send access code to the phone number by sms
 			//redirect to validate access key page
 
-			$generator->setLowercase(true)
-			          ->setUppercase(false)
-			          ->setNumbers(false)
-			          ->setSymbols(false)
-			          ->setLength(4);
-
-			$access_key = $generator->generatePasswords(1)[0];
+			$access_key = $generator->generateString(4, $pasword_characters);
 
 			//connect to sms api
 
@@ -51,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$segment->set('access_code', $access_key);
 			$segment->set('phone_number', trim($_POST['phone-number']));
 
-			header('Location: ' . Config::$site_url . 'sign-up/verify-access-code.php');
+			header('Location: ' . Config::$site_url . 'verify-access-code.php');
 
 		} else {
 			array_push($err, 'Phone number is not valid');
@@ -72,4 +70,4 @@ $data = array(
 	'errors' => $err,
 );
 
-echo $blade->view()->make('users.free-signup', $data);
+echo $blade->view()->make('sign-up.free-signup', $data);

@@ -5,37 +5,30 @@ include_once "../vendor/autoload.php";
 
 // Import the necessary classes
 use Aura\Session\SessionFactory;
+use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 use Philo\Blade\Blade;
-use RandomLib\Factory as PasswordFactory;
 
-//manage session
-$session_factory = new SessionFactory;
-$session = $session_factory->newInstance($_COOKIE);
-$segment = $session->getSegment('oval/signup');
+$generator = new ComputerPasswordGenerator();
 
-//manage password generation
-$factory = new PasswordFactory;
-$generator = $factory->getGenerator(new SecurityLib\Strength(SecurityLib\Strength::MEDIUM));
-$pasword_characters = 'abcdefghijklmnopqrstuvwxyz';
-
-//front-end view
 $views = __DIR__ . '../../views';
 $cache = __DIR__ . '../../cache';
+
 $blade = new Blade($views, $cache);
 
-$form_data = array(
-	'phone-number' => '',
-);
+$session_factory = new SessionFactory;
+$session = $session_factory->newInstance($_COOKIE);
+
+$segment = $session->getSegment('oval/signup');
+
+$session_access_code = $segment->get('access_code');
 
 $form_data = array();
 $err = array();
 
-$session_access_code = $segment->get('access_code');
-
 if ($session_access_code == '' || strlen($session_access_code) > 4 || strlen($session_access_code) < 3) {
 
 	$session->destroy();
-	header('Location: ' . Config::$site_url);
+	header('Location: ' . Config::$site_url . 'sign-up/');
 
 } else {
 
@@ -65,5 +58,5 @@ if ($session_access_code == '' || strlen($session_access_code) > 4 || strlen($se
 		'errors' => $err,
 	);
 	echo $session_access_code;
-	echo $blade->view()->make('sign-up.verify-access-code', $data);
+	echo $blade->view()->make('users.verify-access-code', $data);
 }
