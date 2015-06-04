@@ -1,0 +1,19 @@
+{
+    "name": "creatix/hotspot",
+    "authors": [
+        {
+            "name": "lijith",
+            "email": "creativequb@gmail.com"
+        }
+    ],
+    "require": {
+        "philo/laravel-blade": "~2.1",
+        "illuminate/database": "4.2.*",
+        "nesbot/carbon": "~1.15",
+        "hackzilla/password-generator": "~1.0",
+        "aura/session": "^2.0"
+    },
+    "autoload": {
+        "classmap": ["App/"]
+    }
+}
