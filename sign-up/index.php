@@ -2,32 +2,11 @@
 
 // Include the composer autoload file
 include_once "../vendor/autoload.php";
-
-// Import the necessary classes
-use Aura\Session\SessionFactory;
-use Philo\Blade\Blade;
-use RandomLib\Factory as PasswordFactory;
-
-//manage session
-$session_factory = new SessionFactory;
-$session = $session_factory->newInstance($_COOKIE);
-$segment = $session->getSegment('oval/signup');
-
-//manage password generation
-$factory = new PasswordFactory;
-$generator = $factory->getGenerator(new SecurityLib\Strength(SecurityLib\Strength::MEDIUM));
-$pasword_characters = 'abcdefghijklmnopqrstuvwxyz';
-
-//front-end view
-$views = __DIR__ . '../../views';
-$cache = __DIR__ . '../../cache';
-$blade = new Blade($views, $cache);
+include_once "settings.php";
 
 $form_data = array(
 	'phone-number' => '',
 );
-
-$err = array();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -37,19 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		if (is_numeric($_POST['phone-number'])) {
 
-			//generate an access key and store in session with number
-			//send access code to the phone number by sms
-			//redirect to validate access key page
-
-			$access_key = $generator->generateString(4, $pasword_characters);
-
-			//connect to sms api
-
-			//set access code to session
-			$segment->set('access_code', $access_key);
+			//save phone number to session
 			$segment->set('phone_number', trim($_POST['phone-number']));
 
-			header('Location: ' . Config::$site_url . 'verify-access-code.php');
+			//redirect to plan selection
+			header('Location: ' . Config::$site_url . 'user-select-plan.php');
 
 		} else {
 			array_push($err, 'Phone number is not valid');

@@ -11,7 +11,9 @@
         "illuminate/database": "4.2.*",
         "nesbot/carbon": "~1.15",
         "aura/session": "^2.0",
-        "ircmaxell/random-lib": "^1.1"
+        "ircmaxell/random-lib": "^1.1",
+        "florianv/swap": "^2.0",
+        "hashids/hashids": "^1.0"
     },
     "autoload": {
         "classmap": ["App/"]
