@@ -69,5 +69,5 @@ if ($segment->get('user_plan') != '' && $segment->get('phone_number') != '') {
 	}
 
 } else {
-	header('Location: ' . Config::$site_url . 'sign-up');
+	header('Location: ' . Config::$site_url);
 }

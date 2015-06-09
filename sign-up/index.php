@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $data = array(
 	'site_url' => Config::$site_url,
-	'page_title' => "Free Sign-up for 30mins",
+	'page_title' => "Sign-Up for Wifi Access",
 	'name' => 'Sign-Up',
 	'flash' => $segment->getFlash('message'),
 	'form_data' => $form_data,
