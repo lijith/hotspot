@@ -13,16 +13,19 @@ $payment_success = true;
 if ($segment->get('user_plan') != '' && $segment->get('phone_number') != '') {
 
 	$phone_number = $segment->get('phone_number');
-	$plan = $plan = $capsule::table('couponplans')
+	$plan = $capsule::table('couponplans')
 		->where('id', '=', $hashids->decode($segment->get('user_plan')))
 		->first();
+
+	// var_dump($plan['planname']);
+	// die;
 
 	if ($payment_success) {
 
 		//generate a username and password
 
 		//get all the usernames in account
-		$usernames = $plan = $capsule::table('radacct')
+		$usernames = $capsule::table('radcheck')
 			->select('username')
 			->get();
 		$current_users = array();
@@ -37,11 +40,29 @@ if ($segment->get('user_plan') != '' && $segment->get('phone_number') != '') {
 		}
 		$password = $generator->generateString(6, $pasword_characters);
 
-		//add username and password to radacct
+		//add username and password , groupname
 		//
+		$rad_insert = $capsule::table('radcheck')
+			->insert(array(
+				'username' => $username,
+				'attribute' => 'Cleartext-Password',
+				'op' => ':=',
+				'value' => $password,
+			));
 
-		//send username and password thru sms
-		//
+		$usergrp_insert = $capsule::table('radusergroup')
+			->insert(array(
+				'username' => $username,
+				'groupname' => $plan['planname'],
+				'priority' => '0',
+			));
+
+		if ($rad_insert && $usergrp_insert) {
+			//send username and password thru sms
+			//
+
+			echo 'username : ' . $username . ' password : ' . $password;
+		}
 
 		//redirect to hotspot login page
 
