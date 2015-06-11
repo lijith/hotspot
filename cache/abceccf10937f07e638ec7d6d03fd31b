@@ -1,0 +1,30 @@
+<?php $__env->startSection('content'); ?>
+
+	<div class="sign-up">
+
+	<section class="panel">
+		<div class="panel-body">
+			<?php if(!empty($errors)): ?>
+
+				<div class="alert alert-block alert-danger fade in">
+					<ul>
+					<?php foreach($errors as $error): ?>
+						<li><?php echo $error; ?></li>
+					<?php endforeach; ?>
+					</ul>
+				</div><!-- /.notification error -->
+				<p>
+					<a href="" class="btn btn-primary  btn-sm">Try Again</a>
+				</p>
+			<?php endif; ?>
+		</div>
+	</section>
+
+
+
+	</div><!-- /.sign-up -->
+
+<?php $__env->stopSection(); ?>
+
+
+<?php echo $__env->make('sign-up-layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -36,5 +36,9 @@ $views = __DIR__ . '../../views';
 $cache = __DIR__ . '../../cache';
 $blade = new Blade($views, $cache);
 
+//load env file
+$dotenv = new Dotenv\Dotenv(__DIR__ . '../../');
+$dotenv->load();
+
 $err = array();
 $msg = array();

@@ -1,0 +1,42 @@
+<?php $__env->startSection('content'); ?>
+
+	<div class="sign-up">
+
+		<h2 class="form-signin-heading">Payment</h2>
+
+		<div class="form-wrap">
+			<div class="sign-up-form">
+				<?php if(!empty($errors)): ?>
+					<div class="alert alert-block alert-danger fade in">
+						<ul>
+						<?php foreach($errors as $error): ?>
+							<li><?php echo $error; ?></li>
+						<?php endforeach; ?>
+						</ul>
+					</div><!-- /.notification error -->
+				<?php endif; ?>
+				<p>Order ID : <strong><?php echo $form_data['Order_Id']; ?></strong></p>
+				<p>Your Plan : <strong><?php echo ucwords($plan['planname']); ?></strong></p>
+				<p>Pay Rs : <strong><?php echo $plan['price']; ?></strong></p>
+				 <form method="post" name="redirect" action="http://www.ccavenue.com/shopzone/cc_details.jsp">
+
+						<input type="hidden" name="encRequest" value="<?php echo $form_data['encrypted']; ?>">
+						<input type="hidden" name="Merchant_Id" value="<?php echo $form_data['Merchant_Id']; ?>">
+
+						<button type="submit" class="btn btn-lg btn-login btn-block">Make Payment</button>
+				 </form>
+				<p><small>You will be forwarded to payment gateway</small></p>
+			</div><!-- /.sign-up-form -->
+
+
+
+
+
+		</div><!-- /.sign-up-wrap -->
+
+
+
+	</div><!-- /.sign-up -->
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('sign-up-layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

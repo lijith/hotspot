@@ -13,11 +13,11 @@ if ($segment->get('user_plan') != '' && $segment->get('phone_number') != '') {
 		->where('id', '=', $hashids->decode($segment->get('user_plan')))
 		->first();
 
-	$order_id = 'OvalWiFi' . \Carbon\Carbon::now()->format('YMd');
-	$merchant_id = 'M_eshopsbg_6774';
+	$order_id = 'OvalWiFi-' . \Carbon\Carbon::now()->format('YMd-Hi');
+	$merchant_id = getenv('CCAVENUE_MERCHANT_KEY');
 	$amount = $plan['price'];
-	$url = 'http://hotspot.dev/';
-	$working_key = 'JKpJPyTJFWRFqvUQEXSeIxGBVKLqGixA';
+	$url = Config::$site_url . 'confirm-payment.php/';
+	$working_key = getenv('CCCAVENUE_WORKING_KEY');
 
 	$billing_cust_name = '';
 	$billing_cust_address = '';

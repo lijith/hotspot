@@ -17,6 +17,7 @@
 						</ul>
 					</div><!-- /.notification error -->
 				@endif
+				<p>Order ID : <strong>{{ $form_data['Order_Id'] }}</strong></p>
 				<p>Your Plan : <strong>{{ucwords($plan['planname'])}}</strong></p>
 				<p>Pay Rs : <strong>{{$plan['price']}}</strong></p>
 				 <form method="post" name="redirect" action="http://www.ccavenue.com/shopzone/cc_details.jsp">

@@ -4,23 +4,32 @@
 include_once "../vendor/autoload.php";
 include_once "settings.php";
 
-$payment_success = true;
+$ccavenue = new \Ccavenue\CCAvenue;
+
+$MerchantId = $_POST['Merchant_Id'];
+$OrderId = $_POST['Order_Id'];
+$Amount = $_POST['Amount'];
+$AuthDesc = $_POST['AuthDesc'];
+$workingKey = getenv('CCCAVENUE_WORKING_KEY');
+$Checksum = $_POST['Checksum'];
 
 //process return
 //from the gateway and find status
+$ResponseString = $MerchantId . '|' . $OrderId . '|' . $Amount . '|' . $AuthDesc . '|' . $workingKey;
+$ResponseChecksum = $ccavenue->genchecksum($ResponseString);
+$ChecksumStatus = $ccavenue->verifyChecksum($ResponseChecksum, $Checksum);
 
-//if valid sessions present
-if ($segment->get('user_plan') != '' && $segment->get('phone_number') != '') {
+if ($ChecksumStatus == TRUE && $AuthDesc === "Y") {
+	//Successful Transaction
+	//send generate username password and send sms
 
-	$phone_number = $segment->get('phone_number');
-	$plan = $capsule::table('couponplans')
-		->where('id', '=', $hashids->decode($segment->get('user_plan')))
-		->first();
+	//if valid sessions present
+	if ($segment->get('user_plan') != '' && $segment->get('phone_number') != '') {
 
-	// var_dump($plan['planname']);
-	// die;
-
-	if ($payment_success) {
+		$phone_number = $segment->get('phone_number');
+		$plan = $capsule::table('couponplans')
+			->where('id', '=', $hashids->decode($segment->get('user_plan')))
+			->first();
 
 		//generate a username and password
 
@@ -61,13 +70,20 @@ if ($segment->get('user_plan') != '' && $segment->get('phone_number') != '') {
 			//send username and password thru sms
 			//
 
-			echo 'username : ' . $username . ' password : ' . $password;
+			$segment->set('payment_status', 'success');
+			header('Location: ' . Config::$site_url . 'transaction-success.php?username=' . $username . '&password=' . $password);
 		}
 
-		//redirect to hotspot login page
-
+	} else {
+		header('Location: ' . Config::$site_url);
 	}
 
-} else {
-	header('Location: ' . Config::$site_url);
+} elseif ($ChecksumStatus == TRUE && $AuthDesc === "B") {
+	//Pending Transaction
+} elseif ($ChecksumStatus == TRUE && $AuthDesc === "N") {
+	//Failed Transaction
+	//Redirect to check-out page
+
+	$segment->set('payment_status', 'fail');
+	header('Location: ' . Config::$site_url . 'transaction-failed.php');
 }

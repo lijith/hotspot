@@ -12,8 +12,9 @@
         "nesbot/carbon": "~1.15",
         "aura/session": "^2.0",
         "ircmaxell/random-lib": "^1.1",
-        "florianv/swap": "^2.0",
-        "hashids/hashids": "^1.0"
+        "hashids/hashids": "^1.0",
+        "vlucas/phpdotenv": "^2.0",
+        "florianv/swap": "^2.1"
     },
     "autoload": {
         "classmap": ["App/"]
