@@ -4,7 +4,7 @@
 
 	<div class="sign-up">
 
-		<h2 class="form-signin-heading">Sign up here</h2>
+		<h2 class="form-signin-heading">Verify Access code</h2>
 
 		<div class="form-wrap">
 			<div class="sign-up-form">
@@ -23,6 +23,7 @@
 					<button type="submit" class="btn btn-lg btn-login btn-block">Verify</button>
 				</form>
 				<p><small>Enter Access Code</small></p>
+				<p><a href="{{ $site_url }}resend-access-code.php" class="btn btn-default">Resend Access Code</a> </p>
 			</div><!-- /.sign-up-form -->
 
 

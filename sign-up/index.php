@@ -19,8 +19,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			//save phone number to session
 			$segment->set('phone_number', trim($_POST['phone-number']));
 
+			//access code
+			$access_key = $generator->generateString(4, $pasword_characters);
+			$segment->set('access_code', $access_key);
+
+			//send access code by SMS
+
 			//redirect to plan selection
-			header('Location: ' . Config::$site_url . 'user-select-plan.php');
+			header('Location: ' . Config::$site_url . 'verify-mobile-user.php');
 
 		} else {
 			array_push($err, 'Phone number is not valid');

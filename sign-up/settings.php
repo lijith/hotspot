@@ -21,6 +21,7 @@ $capsule->bootEloquent();
 //manage session
 $session_factory = new SessionFactory;
 $session = $session_factory->newInstance($_COOKIE);
+$session->setCookieParams(array('lifetime' => '1800')); //30 seconds
 $segment = $session->getSegment('oval/signup');
 
 //manage password generation

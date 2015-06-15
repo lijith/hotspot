@@ -5,13 +5,52 @@ include_once "../vendor/autoload.php";
 include_once "settings.php";
 
 $ccavenue = new \Ccavenue\CCAvenue;
+$aes = new \Ccavenue\AESCrypt;
 
-$MerchantId = $_POST['Merchant_Id'];
-$OrderId = $_POST['Order_Id'];
-$Amount = $_POST['Amount'];
-$AuthDesc = $_POST['AuthDesc'];
+$encResponse = $_POST['encResponse'];
 $workingKey = getenv('CCCAVENUE_WORKING_KEY');
-$Checksum = $_POST['Checksum'];
+
+$decrypted_response = $aes->decrypt($encResponse, $workingKey);
+
+$ResponseBreakUp = explode('&', $decrypted_response);
+
+$dataSize = sizeof($ResponseBreakUp);
+
+for ($i = 0; $i < $dataSize; $i++) {
+	$information = explode('=', $ResponseBreakUp[$i]);
+	if ($i == 0) {
+		$MerchantId = $information[1];
+	}
+
+	if ($i == 1) {
+		$OrderId = $information[1];
+	}
+
+	if ($i == 2) {
+		$Amount = $information[1];
+	}
+
+	if ($i == 3) {
+		$AuthDesc = $information[1];
+	}
+
+	if ($i == 4) {
+		$Checksum = $information[1];
+	}
+
+}
+
+/*
+ *
+ * non encrypted response
+ *
+ * */
+// $MerchantId = $_POST['Merchant_Id'];
+// $OrderId = $_POST['Order_Id'];
+// $Amount = $_POST['Amount'];
+// $AuthDesc = $_POST['AuthDesc'];
+// $workingKey = getenv('CCCAVENUE_WORKING_KEY');
+// $Checksum = $_POST['Checksum'];
 
 //process return
 //from the gateway and find status
@@ -80,10 +119,12 @@ if ($ChecksumStatus == TRUE && $AuthDesc === "Y") {
 
 } elseif ($ChecksumStatus == TRUE && $AuthDesc === "B") {
 	//Pending Transaction
+	return 'success';
+
 } elseif ($ChecksumStatus == TRUE && $AuthDesc === "N") {
 	//Failed Transaction
 	//Redirect to check-out page
 
-	$segment->set('payment_status', 'fail');
-	header('Location: ' . Config::$site_url . 'transaction-failed.php');
+	return 'fail';
+
 }
