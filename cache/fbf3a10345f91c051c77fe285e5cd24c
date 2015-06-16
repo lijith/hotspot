@@ -6,13 +6,10 @@
 
 		<div class="form-wrap">
 			<div class="sign-up-form">
-				<?php if(!empty($errors)): ?>
+				<?php if($flash != ''): ?>
 					<div class="alert alert-block alert-danger fade in">
-						<ul>
-						<?php foreach($errors as $error): ?>
-							<li><?php echo $error; ?></li>
-						<?php endforeach; ?>
-						</ul>
+						<?php echo $flash; ?>
+
 					</div><!-- /.notification error -->
 				<?php endif; ?>
 				<form method="POST" action="">

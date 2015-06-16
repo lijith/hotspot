@@ -21,9 +21,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 			//access code
 			$access_key = $generator->generateString(4, $pasword_characters);
+			$segment->set('access_code_sent_time', \Carbon\Carbon::now());
 			$segment->set('access_code', $access_key);
 
 			//send access code by SMS
+
+			$getQuery = 'http://www.smsalertbox.com/api/sms.php?';
+			$getQuery .= 'uid=' . getenv('UID');
+			$getQuery .= '&pin=' . getenv('PIN');
+			$getQuery .= '&sender=' . getenv('SENDER');
+			$getQuery .= '&route=' . getenv('ROUTE');
+			$getQuery .= '&tempid=' . 36828;
+			$getQuery .= '&mobile=' . $_POST['phone-number'];
+			$getQuery .= '&message=' . urlencode('Dear customer your account has been created with username ' . $access_key . ' and password ' . $access_key . '. Thank you.');
+			$getQuery .= '&pushid=' . getenv('PUSHID');
+
+			$client = new GuzzleHttp\Client(['base_uri' => 'http://www.smsalertbox.com/api/sms.php']);
+			$response = $client->get($getQuery);
 
 			//redirect to plan selection
 			header('Location: ' . Config::$site_url . 'verify-mobile-user.php');

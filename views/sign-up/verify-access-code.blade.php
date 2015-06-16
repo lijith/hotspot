@@ -8,13 +8,9 @@
 
 		<div class="form-wrap">
 			<div class="sign-up-form">
-				@if(!empty($errors))
+				@if($flash != '')
 					<div class="alert alert-block alert-danger fade in">
-						<ul>
-						@foreach($errors as $error)
-							<li>{{$error}}</li>
-						@endforeach
-						</ul>
+						{{$flash}}
 					</div><!-- /.notification error -->
 				@endif
 				<form method="POST" action="">

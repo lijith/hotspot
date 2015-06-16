@@ -44,6 +44,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$access_key = $generator->generateString(4, $pasword_characters);
 
 			//connect to sms api
+			$client = new GuzzleHttp\Client(['base_uri' => 'http://www.smsalertbox.com/api/sms.php']);
+			$getQuery = 'http://www.smsalertbox.com/api/sms.php?' .
+			$getQuery .= 'uid=' . getenv('UID');
+			$getQuery .= '&pin=' . getenv('PIN');
+			$getQuery .= '&sender=' . getenv('SENDER');
+			$getQuery .= '&route=' . getenv('ROUTE');
+			$getQuery .= '&tempid=' . getenv('TEMPID');
+			$getQuery .= '&mobile=' . $_POST['phone-number'];
+			$getQuery .= '&message=' . urlencode('Dear customer your access code is ' . $access_key);
+			$getQuery .= '&pushid=1' . getenv('PUSHID');
+
+			echo $getQuery;
+
+			$response = $client->get($getQuery);
+
+			die();
 
 			//set access code to session
 			$segment->set('access_code', $access_key);
