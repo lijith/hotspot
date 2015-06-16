@@ -2,32 +2,11 @@
 
 // Include the composer autoload file
 include_once "../vendor/autoload.php";
-
-// Import the necessary classes
-use Aura\Session\SessionFactory;
-use Philo\Blade\Blade;
-use RandomLib\Factory as PasswordFactory;
-
-//manage session
-$session_factory = new SessionFactory;
-$session = $session_factory->newInstance($_COOKIE);
-$segment = $session->getSegment('oval/signup');
-
-//manage password generation
-$factory = new PasswordFactory;
-$generator = $factory->getGenerator(new SecurityLib\Strength(SecurityLib\Strength::MEDIUM));
-$pasword_characters = 'abcdefghijklmnopqrstuvwxyz';
-
-//front-end view
-$views = __DIR__ . '../../views';
-$cache = __DIR__ . '../../cache';
-$blade = new Blade($views, $cache);
+include_once "settings.php";
 
 $form_data = array(
 	'phone-number' => '',
 );
-
-$err = array();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -37,35 +16,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		if (is_numeric($_POST['phone-number'])) {
 
-			//generate an access key and store in session with number
-			//send access code to the phone number by sms
-			//redirect to validate access key page
+			//save phone number to session
+			$segment->set('phone_number', trim($_POST['phone-number']));
 
+			//access code
 			$access_key = $generator->generateString(4, $pasword_characters);
+			$segment->set('access_code_sent_time', \Carbon\Carbon::now());
+			$segment->set('access_code', $access_key);
 
-			//connect to sms api
-			$client = new GuzzleHttp\Client(['base_uri' => 'http://www.smsalertbox.com/api/sms.php']);
-			$getQuery = 'http://www.smsalertbox.com/api/sms.php?' .
+			//send access code by SMS
+
+			$getQuery = 'http://www.smsalertbox.com/api/sms.php?';
 			$getQuery .= 'uid=' . getenv('UID');
 			$getQuery .= '&pin=' . getenv('PIN');
 			$getQuery .= '&sender=' . getenv('SENDER');
 			$getQuery .= '&route=' . getenv('ROUTE');
-			$getQuery .= '&tempid=' . getenv('TEMPID');
+			$getQuery .= '&tempid=' . 36828;
 			$getQuery .= '&mobile=' . $_POST['phone-number'];
-			$getQuery .= '&message=' . urlencode('Dear customer your access code is ' . $access_key);
-			$getQuery .= '&pushid=1' . getenv('PUSHID');
+			$getQuery .= '&message=' . urlencode('Dear customer your account has been created with username ' . $access_key . ' and password ' . $access_key . '. Thank you.');
+			$getQuery .= '&pushid=' . getenv('PUSHID');
 
-			echo $getQuery;
-
+			$client = new GuzzleHttp\Client(['base_uri' => 'http://www.smsalertbox.com/api/sms.php']);
 			$response = $client->get($getQuery);
 
-			die();
-
-			//set access code to session
-			$segment->set('access_code', $access_key);
-			$segment->set('phone_number', trim($_POST['phone-number']));
-
-			header('Location: ' . Config::$site_url . 'verify-access-code.php');
+			//redirect to plan selection
+			header('Location: ' . Config::$site_url_free . 'verify-mobile-user.php');
 
 		} else {
 			array_push($err, 'Phone number is not valid');
@@ -78,8 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $data = array(
-	'site_url' => Config::$site_url,
-	'page_title' => "Free Sign-up for 30mins",
+	'site_url' => Config::$site_url_free,
+	'page_title' => "Sign-Up for Wifi Access",
 	'name' => 'Sign-Up',
 	'flash' => $segment->getFlash('message'),
 	'form_data' => $form_data,
