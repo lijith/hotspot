@@ -33,19 +33,19 @@ if ($diff > 120) {
 		$segment->setFlash('message', 'Access code is sent');
 
 		//redirect to plan selection
-		header('Location: ' . Config::$site_url . 'verify-mobile-user.php');
+		header('Location: ' . Config::$site_url_free . 'verify-mobile-user.php');
 
 	} else {
 
 		$session->destroy();
-		header('Location: ' . Config::$site_url);
+		header('Location: ' . Config::$site_url_free);
 	}
 	//redirect to plan selection
-	header('Location: ' . Config::$site_url . 'verify-mobile-user.php');
+	header('Location: ' . Config::$site_url_free . 'verify-mobile-user.php');
 } else {
 	$wait = \Carbon\Carbon::now()->diffInSeconds($last_sms_delivery->addSeconds(120), false);
 	$segment->setFlash('message', 'Wait ' . $wait . ' secs and retry');
-	header('Location: ' . Config::$site_url . 'verify-mobile-user.php');
+	header('Location: ' . Config::$site_url_free . 'verify-mobile-user.php');
 }
 
 //http://www.smsalertbox.com/api/sms.php

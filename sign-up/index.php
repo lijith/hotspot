@@ -31,9 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$getQuery .= '&pin=' . getenv('PIN');
 			$getQuery .= '&sender=' . getenv('SENDER');
 			$getQuery .= '&route=' . getenv('ROUTE');
-			$getQuery .= '&tempid=' . 36828;
+			$getQuery .= '&tempid=' . 36978;
 			$getQuery .= '&mobile=' . $_POST['phone-number'];
-			$getQuery .= '&message=' . urlencode('Dear customer your account has been created with username ' . $access_key . ' and password ' . $access_key . '. Thank you.');
+			$getQuery .= '&message=' . urlencode(' Dear customer your access code is ' . $access_key . '.Thank You.');
 			$getQuery .= '&pushid=' . getenv('PUSHID');
 
 			$client = new GuzzleHttp\Client(['base_uri' => 'http://www.smsalertbox.com/api/sms.php']);
