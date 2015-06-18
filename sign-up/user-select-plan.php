@@ -32,6 +32,7 @@ if ($segment->get('phone_number') != '' && $segment->get('verified') === true) {
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		$segment->set('user_plan', trim($_POST['user-plan']));
+		$segment->set('tid', trim($_POST['tid']));
 
 		//redirect to plan selection
 		header('Location: ' . Config::$site_url . 'check-out.php');

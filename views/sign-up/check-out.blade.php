@@ -20,10 +20,10 @@
 				<p>Order ID : <strong>{{ $form_data['Order_Id'] }}</strong></p>
 				<p>Your Plan : <strong>{{ucwords($plan['planname'])}}</strong></p>
 				<p>Pay Rs : <strong>{{$plan['price']}}</strong></p>
-				 <form method="post" name="redirect" action="http://www.ccavenue.com/shopzone/cc_details.jsp">
+				 <form method="post" name="redirect" action="https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction">
 
 						<input type="hidden" name="encRequest" value="{{$form_data['encrypted']}}">
-						<input type="hidden" name="Merchant_Id" value="{{$form_data['Merchant_Id']}}">
+						<input type="hidden" name="access_code" value="{{$form_data['access_code']}}">
 
 						<button type="submit" class="btn btn-lg btn-login btn-block">Make Payment</button>
 				 </form>

@@ -16,8 +16,10 @@ if ($segment->get('user_plan') != '' && $segment->get('phone_number') != '') {
 	$order_id = 'OvalWiFi-' . \Carbon\Carbon::now()->format('YMd-Hi');
 	$merchant_id = getenv('CCAVENUE_MERCHANT_KEY');
 	$amount = $plan['price'];
-	$url = Config::$site_url . 'confirm-payment.php/';
-	$working_key = getenv('CCCAVENUE_WORKING_KEY');
+	$url = urlencode('http://www.netspot.co.in/success.php');
+	$url_cancel = urlencode('http://www.netspot.co.in/cancel.php');
+	$working_key = getenv('CCAVENUE_WORKING_KEY');
+	$access_code = getenv('CCAVENUE_ACCESS_CODE');
 
 	$billing_cust_name = '';
 	$billing_cust_address = '';
@@ -39,31 +41,41 @@ if ($segment->get('user_plan') != '' && $segment->get('phone_number') != '') {
 	$checksum = $ccavenue->getchecksum($merchant_id, $amount, $order_id, $url, $working_key);
 
 	$merchant_data = '';
-	$merchant_data .= 'Merchant_Id=' . $merchant_id;
-	$merchant_data .= '&Amount=' . $amount;
-	$merchant_data .= '&Order_Id=' . $order_id;
-	$merchant_data .= '&Redirect_Url=' . $url;
-	$merchant_data .= '&billing_cust_name=' . $billing_cust_name;
-	$merchant_data .= '&billing_cust_address=' . $billing_cust_address;
-	$merchant_data .= '&billing_cust_country=' . $billing_cust_country;
-	$merchant_data .= '&billing_cust_state=' . $billing_cust_state;
-	$merchant_data .= '&billing_cust_city=' . $billing_city;
-	$merchant_data .= '&billing_zip_code=' . $billing_zip;
-	$merchant_data .= '&billing_cust_tel=' . $billing_cust_tel;
-	$merchant_data .= '&billing_cust_email=' . $billing_cust_email;
-	$merchant_data .= '&delivery_cust_name=' . $delivery_cust_name;
-	$merchant_data .= '&delivery_cust_address=' . $delivery_cust_address;
-	$merchant_data .= '&delivery_cust_country=' . $delivery_cust_country;
-	$merchant_data .= '&delivery_cust_state=' . $delivery_cust_state;
-	$merchant_data .= '&delivery_cust_city=' . $delivery_city;
-	$merchant_data .= '&delivery_zip_code=' . $delivery_zip;
-	$merchant_data .= '&delivery_cust_tel=' . $delivery_cust_tel;
-	$merchant_data .= '&billing_cust_notes=' . $delivery_cust_notes;
-	$merchant_data .= '&Checksum=' . $checksum;
+	$merchant_data .= 'tid=' . $segment->get('tid');
+	$merchant_data .= '&merchant_id=' . $merchant_id;
+	$merchant_data .= '&order_id=' . $order_id;
+	$merchant_data .= '&amount=' . $amount;
+	$merchant_data .= '&currency=' . 'INR';
+	$merchant_data .= '&redirect_url=' . $url;
+	$merchant_data .= '&cancel_url=' . $url_cancel;
+	$merchant_data .= '&language=' . 'EN';
+	$merchant_data .= '&customer_identifier=' . $segment->get('phone_number');
+
+	$merchant_data .= '&billing_name=""';
+	$merchant_data .= '&billing_address=""';
+	$merchant_data .= '&billing_city=""';
+	$merchant_data .= '&billing_state=""';
+	$merchant_data .= '&billing_zip=""';
+	$merchant_data .= '&billing_country=""';
+	$merchant_data .= '&billing_tel=""';
+	$merchant_data .= '&billing_email=""';
+	$merchant_data .= '&delivery_name=""';
+	$merchant_data .= '&delivery_address=""';
+	$merchant_data .= '&delivery_city=""';
+	$merchant_data .= '&delivery_state=""';
+	$merchant_data .= '&delivery_zip=""';
+	$merchant_data .= '&delivery_country=""';
+	$merchant_data .= '&delivery_tel=""';
+	$merchant_data .= '&merchant_param1=""';
+	$merchant_data .= '&merchant_param2=""';
+	$merchant_data .= '&merchant_param3=""';
+	$merchant_data .= '&merchant_param4=""';
+	$merchant_data .= '&merchant_param5=""';
+	$merchant_data .= '&promo_code=""';
 
 	$encrypted = $aes->encrypt($merchant_data, $working_key);
 
-	// echo $encrypted;
+	// echo $merchant_data;
 	// die;
 
 } else {
@@ -73,7 +85,7 @@ if ($segment->get('user_plan') != '' && $segment->get('phone_number') != '') {
 $form_data = array(
 	'Order_Id' => $order_id,
 	'Amount' => $plan['price'],
-	'Merchant_Id' => 'M_eshopsbg_6774',
+	'Merchant_Id' => $merchant_id,
 	'cmd' => '_xclick',
 	'business' => 'admin@sobg.org',
 	'currency_code' => 'USD',
@@ -91,6 +103,7 @@ $form_data = array(
 	'delivery_cust_email' => '',
 	'delivery_cust_tel' => '',
 	'encrypted' => $encrypted,
+	'access_code' => $access_code,
 );
 
 $data = array(

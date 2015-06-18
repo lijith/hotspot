@@ -24,6 +24,7 @@
               	<option value="{{ $plan['id'] }}">Rs {{ $plan['price'] }} for	{{ $plan['planname'] }}</option>
 							@endforeach
           </select>
+          <input type="hidden" id="tid" value="" name="tid" />
 
 					<button type="submit" class="btn btn-lg btn-login btn-block">BUY</button>
 				</form>
@@ -34,7 +35,12 @@
 
 		</div><!-- /.sign-up-wrap -->
 
-
+		<script>
+			window.onload = function() {
+				var d = new Date().getTime();
+				document.getElementById("tid").value = d;
+			};
+		</script>
 
 	</div><!-- /.sign-up -->
 

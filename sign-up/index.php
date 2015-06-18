@@ -8,6 +8,10 @@ $form_data = array(
 	'phone-number' => '',
 );
 
+if ($segment->get('access_code_sent_time') != '') {
+	header('Location: ' . Config::$site_url . 'verify-mobile-user.php');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 	$form_data['phone-number'] = $_POST['phone-number'];
@@ -33,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$getQuery .= '&route=' . getenv('ROUTE');
 			$getQuery .= '&tempid=' . 36978;
 			$getQuery .= '&mobile=' . $_POST['phone-number'];
-			$getQuery .= '&message=' . urlencode(' Dear customer your access code is ' . $access_key . '.Thank You.');
+			$getQuery .= '&message=' . urlencode('Dear customer your access code is ' . $access_key . '.Thank You.');
 			$getQuery .= '&pushid=' . getenv('PUSHID');
 
 			$client = new GuzzleHttp\Client(['base_uri' => 'http://www.smsalertbox.com/api/sms.php']);
