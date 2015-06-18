@@ -4,7 +4,7 @@
  */
 class Config {
 
-	public static $site_url = "http://hotspot.dev/sign-up/";
-	public static $site_url_free = "http://hotspot.dev/sign-up-free/";
+	public static $site_url = "http://netspot.co.in/sign-up/";
+	public static $site_url_free = "http://netspot.co.in/sign-up-free/";
 
 }

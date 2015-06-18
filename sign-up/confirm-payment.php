@@ -7,8 +7,8 @@ include_once "settings.php";
 $ccavenue = new \Ccavenue\CCAvenue;
 $aes = new \Ccavenue\AESCrypt;
 
-$encResponse = $_POST['encResponse'];
-$workingKey = getenv('CCCAVENUE_WORKING_KEY');
+$encResponse = $_POST['encResp'];
+$workingKey = getenv('CCAVENUE_WORKING_KEY');
 
 $decrypted_response = $aes->decrypt($encResponse, $workingKey);
 
@@ -54,11 +54,11 @@ for ($i = 0; $i < $dataSize; $i++) {
 
 //process return
 //from the gateway and find status
-$ResponseString = $MerchantId . '|' . $OrderId . '|' . $Amount . '|' . $AuthDesc . '|' . $workingKey;
-$ResponseChecksum = $ccavenue->genchecksum($ResponseString);
-$ChecksumStatus = $ccavenue->verifyChecksum($ResponseChecksum, $Checksum);
+// $ResponseString = $MerchantId . '|' . $OrderId . '|' . $Amount . '|' . $AuthDesc . '|' . $workingKey;
+// $ResponseChecksum = $ccavenue->genchecksum($ResponseString);
+// $ChecksumStatus = $ccavenue->verifyChecksum($ResponseChecksum, $Checksum);
 
-if ($ChecksumStatus == TRUE && $AuthDesc === "Y") {
+if ($AuthDesc === "Success") {
 	//Successful Transaction
 	//send generate username password and send sms
 
@@ -117,14 +117,18 @@ if ($ChecksumStatus == TRUE && $AuthDesc === "Y") {
 		header('Location: ' . Config::$site_url);
 	}
 
-} elseif ($ChecksumStatus == TRUE && $AuthDesc === "B") {
-	//Pending Transaction
-	return 'success';
+	echo 'success';
 
-} elseif ($ChecksumStatus == TRUE && $AuthDesc === "N") {
+} elseif ($AuthDesc === "Aborted") {
+	//Pending Transaction
+	echo 'Canceled';
+
+} elseif ($AuthDesc === "Failure") {
 	//Failed Transaction
 	//Redirect to check-out page
 
-	return 'fail';
+	echo 'failed';
 
+} else {
+	echo 'something wrong in : server response = ' . $AuthDesc;
 }

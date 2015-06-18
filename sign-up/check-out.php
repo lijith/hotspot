@@ -16,29 +16,10 @@ if ($segment->get('user_plan') != '' && $segment->get('phone_number') != '') {
 	$order_id = 'OvalWiFi-' . \Carbon\Carbon::now()->format('YMd-Hi');
 	$merchant_id = getenv('CCAVENUE_MERCHANT_KEY');
 	$amount = $plan['price'];
-	$url = urlencode('http://www.netspot.co.in/success.php');
-	$url_cancel = urlencode('http://www.netspot.co.in/cancel.php');
+	$url = urlencode(Config::$site_url . 'sign-up/confirm-payment.php');
+	$url_cancel = urlencode(Config::$site_url . 'cancel.php');
 	$working_key = getenv('CCAVENUE_WORKING_KEY');
 	$access_code = getenv('CCAVENUE_ACCESS_CODE');
-
-	$billing_cust_name = '';
-	$billing_cust_address = '';
-	$billing_cust_country = '';
-	$billing_cust_state = '';
-	$billing_city = '';
-	$billing_zip = '';
-	$billing_cust_tel = '';
-	$billing_cust_email = '';
-	$delivery_cust_name = '';
-	$delivery_cust_address = '';
-	$delivery_cust_country = '';
-	$delivery_cust_state = '';
-	$delivery_city = '';
-	$delivery_zip = '';
-	$delivery_cust_tel = '';
-	$delivery_cust_notes = '';
-
-	$checksum = $ccavenue->getchecksum($merchant_id, $amount, $order_id, $url, $working_key);
 
 	$merchant_data = '';
 	$merchant_data .= 'tid=' . $segment->get('tid');
