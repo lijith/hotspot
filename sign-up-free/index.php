@@ -18,31 +18,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		if (is_numeric($_POST['phone-number'])) {
 
-			//save phone number to session
-			$segment->set('phone_number', trim($_POST['phone-number']));
+			$yesterday = \Carbon\Carbon::now()->subDay();
+			//check if the current mobile number is used in last 24 hrs
+			$userinfo = $capsule::table('userinfo')
+				->where('mobilephone', '=', trim($_POST['phone-number']))
+				->where('creationdate', '>', $yesterday)
+				->get();
 
-			//access code
-			$access_key = $generator->generateString(4, $pasword_characters);
-			$segment->set('access_code_sent_time', \Carbon\Carbon::now());
-			$segment->set('access_code', $access_key);
+			if (!empty($userinfo)) {
+				array_push($err, 'Your Free Access Is Only Available Tomorrow');
+			} else {
+				//save phone number to session
+				$segment->set('phone_number', trim($_POST['phone-number']));
 
-			//send access code by SMS
+				//access code
+				$access_key = $generator->generateString(4, $pasword_characters);
+				$segment->set('access_code_sent_time', \Carbon\Carbon::now());
+				$segment->set('access_code', $access_key);
 
-			$getQuery = 'http://www.smsalertbox.com/api/sms.php?';
-			$getQuery .= 'uid=' . getenv('UID');
-			$getQuery .= '&pin=' . getenv('PIN');
-			$getQuery .= '&sender=' . getenv('SENDER');
-			$getQuery .= '&route=' . getenv('ROUTE');
-			$getQuery .= '&tempid=' . 36978;
-			$getQuery .= '&mobile=' . $_POST['phone-number'];
-			$getQuery .= '&message=' . urlencode('Dear customer your access code is ' . $access_key . '.Thank You.');
-			$getQuery .= '&pushid=' . getenv('PUSHID');
+				//send access code by SMS
 
-			$client = new GuzzleHttp\Client(['base_uri' => 'http://www.smsalertbox.com/api/sms.php']);
-			$response = $client->get($getQuery);
+				$getQuery = 'http://www.smsalertbox.com/api/sms.php?';
+				$getQuery .= 'uid=' . getenv('UID');
+				$getQuery .= '&pin=' . getenv('PIN');
+				$getQuery .= '&sender=' . getenv('SENDER');
+				$getQuery .= '&route=' . getenv('ROUTE');
+				$getQuery .= '&tempid=' . 36978;
+				$getQuery .= '&mobile=' . $_POST['phone-number'];
+				$getQuery .= '&message=' . urlencode('Dear customer your access code is ' . $access_key . '.Thank You.');
+				$getQuery .= '&pushid=' . getenv('PUSHID');
 
-			//redirect to plan selection
-			header('Location: ' . Config::$site_url_free . 'verify-mobile-user.php');
+				$client = new GuzzleHttp\Client(['base_uri' => 'http://www.smsalertbox.com/api/sms.php']);
+				$response = $client->get($getQuery);
+
+				//redirect to plan selection
+				header('Location: ' . Config::$site_url_free . 'verify-mobile-user.php');
+			}
 
 		} else {
 			array_push($err, 'Phone number is not valid');

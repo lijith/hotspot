@@ -53,22 +53,31 @@ if ($segment->get('phone_number') != '' && $segment->get('access_code') != '') {
 						'priority' => '0',
 					));
 
-				//send access code by SMS
+				//set user info
+				$user_info_inser = $capsule::table('userinfo')
+					->insert(array(
+						'username' => $username,
+						'mobilephone' => $segment->get('phone_number'),
+						'creationdate' => \Carbon\Carbon::now(),
+						'updatedate' => \Carbon\Carbon::now(),
+					));
+
+				//send login details
 				$getQuery = 'http://www.smsalertbox.com/api/sms.php?';
 				$getQuery .= 'uid=' . getenv('UID');
 				$getQuery .= '&pin=' . getenv('PIN');
 				$getQuery .= '&sender=' . getenv('SENDER');
 				$getQuery .= '&route=' . getenv('ROUTE');
 				$getQuery .= '&tempid=' . 36828;
-				$getQuery .= '&mobile=' . $_POST['phone-number'];
-				$getQuery .= '&message=' . urlencode('Dear customer your account has been created with username ' . $access_key . ' and password ' . $access_key . '. Thank you.');
+				$getQuery .= '&mobile=' . $segment->get('phone_number');
+				$getQuery .= '&message=' . urlencode('Dear customer your account has been created with username ' . $username . ' and password ' . $password . '. Thank you.');
 				$getQuery .= '&pushid=' . getenv('PUSHID');
 
 				$client = new GuzzleHttp\Client(['base_uri' => 'http://www.smsalertbox.com/api/sms.php']);
 				$response = $client->get($getQuery);
 
 				$segment->set('payment_status', 'success');
-				header('Location: ' . Config::$site_url . 'transaction-success.php?username=' . $username . '&password=' . $password);
+				header('Location: ' . Config::$site_url_free . 'transaction-success.php?username=' . $username . '&password=' . $password);
 
 			} else {
 				array_push($err, 'The Access Code is not valid');
