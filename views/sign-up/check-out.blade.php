@@ -20,7 +20,7 @@
 				<p>Order ID : <strong>{{ $form_data['Order_Id'] }}</strong></p>
 				<p>Your Plan : <strong>{{ucwords($plan['planname'])}}</strong></p>
 				<p>Pay Rs : <strong>{{$plan['price']}}</strong></p>
-				 <form method="post" name="redirect" action="https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction">
+				 <form method="post" name="redirect" action="https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction">
 
 						<input type="hidden" name="encRequest" value="{{$form_data['encrypted']}}">
 						<input type="hidden" name="access_code" value="{{$form_data['access_code']}}">

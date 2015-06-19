@@ -13,6 +13,14 @@
 						{{$flash}}
 					</div><!-- /.notification error -->
 				@endif
+				@if(!empty($errors))
+					<div class="alert alert-block alert-danger fade in">
+						@foreach ($errors as $err)
+							{{$err}}
+						@endforeach
+
+					</div><!-- /.notification error -->
+				@endif
 				<form method="POST" action="">
 					<input type="text" name="access-code" autofocus="" placeholder="access code here" class="form-control" autocomplete="off" >
 

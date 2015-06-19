@@ -18,15 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		if (is_numeric($_POST['phone-number'])) {
 
-			$yesterday = \Carbon\Carbon::now()->subDay();
+			$today_start = \Carbon\Carbon::now()->startOfDay();
+			$today_end = \Carbon\Carbon::now()->endOfDay();
 			//check if the current mobile number is used in last 24 hrs
 			$userinfo = $capsule::table('userinfo')
 				->where('mobilephone', '=', trim($_POST['phone-number']))
-				->where('creationdate', '>', $yesterday)
+				->whereBetween('creationdate', array($today_start, $today_end))
 				->get();
 
 			if (!empty($userinfo)) {
-				array_push($err, 'Your Free Access Is Only Available Tomorrow');
+				array_push($err, 'Your free internet access is available only once in 24hrs. Please try tomorrow');
 			} else {
 				//save phone number to session
 				$segment->set('phone_number', trim($_POST['phone-number']));

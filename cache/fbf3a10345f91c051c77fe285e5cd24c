@@ -12,13 +12,22 @@
 
 					</div><!-- /.notification error -->
 				<?php endif; ?>
+				<?php if(!empty($errors)): ?>
+					<div class="alert alert-block alert-danger fade in">
+						<?php foreach($errors as $err): ?>
+							<?php echo $err; ?>
+
+						<?php endforeach; ?>
+
+					</div><!-- /.notification error -->
+				<?php endif; ?>
 				<form method="POST" action="">
 					<input type="text" name="access-code" autofocus="" placeholder="access code here" class="form-control" autocomplete="off" >
 
 					<button type="submit" class="btn btn-lg btn-login btn-block">Verify</button>
 				</form>
 				<p><small>Enter Access Code</small></p>
-				<p><a href="<?php echo $site_url; ?>resend-access-code.php" class="btn btn-default">Resend Access Code</a> </p>
+				<p><a href="<?php echo $site_url; ?>resend-access-code.php" class="btn btn-primary">Resend Access Code</a> </p>
 			</div><!-- /.sign-up-form -->
 
 
