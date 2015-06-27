@@ -77,7 +77,7 @@ if ($segment->get('phone_number') != '' && $segment->get('access_code') != '') {
 				$response = $client->get($getQuery);
 
 				$segment->set('payment_status', 'success');
-				header('Location: ' . Config::$site_url_free . 'transaction-success.php?username=' . $username . '&password=' . $password);
+				header('Location: ' . Config::$site_url_free . 'final.php?username=' . $username . '&password=' . $password);
 
 			} else {
 				array_push($err, 'The Access Code is not valid');

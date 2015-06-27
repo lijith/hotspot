@@ -27,7 +27,7 @@
 					<button type="submit" class="btn btn-lg btn-login btn-block">Verify</button>
 				</form>
 				<p><small>Enter Access Code</small></p>
-				<p><a href="<?php echo $site_url; ?>resend-access-code.php" class="btn btn-primary">Resend Access Code</a> </p>
+				<p><a href="<?php echo $site_url; ?>resend-access-code.php" class="btn btn-default">Resend Access Code</a> </p>
 			</div><!-- /.sign-up-form -->
 
 
