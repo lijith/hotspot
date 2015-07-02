@@ -23,7 +23,7 @@ if ($segment->get('phone_number') != '' && $segment->get('access_code') != '') {
 			'password' => $_GET['password'],
 		);
 
-		echo $blade->view()->make('sign-up.verify-access-code', $data);
+		echo $blade->view()->make('sign-up.final', $data);
 	}
 } else {
 

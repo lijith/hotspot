@@ -28,6 +28,7 @@
 				</form>
 				<p><small>Enter Access Code</small></p>
 				<p><a href="{{ $site_url }}resend-access-code.php" class="btn btn-default">Resend Access Code</a> </p>
+				<p>Access Code is send to your mobile by SMS. If you haven't received SMS please press Resend Access Code</p>
 			</div><!-- /.sign-up-form -->
 
 
