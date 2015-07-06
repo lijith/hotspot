@@ -57,13 +57,13 @@ for ($i = 0; $i < $dataSize; $i++) {
 // $ResponseString = $MerchantId . '|' . $OrderId . '|' . $Amount . '|' . $AuthDesc . '|' . $workingKey;
 // $ResponseChecksum = $ccavenue->genchecksum($ResponseString);
 // $ChecksumStatus = $ccavenue->verifyChecksum($ResponseChecksum, $Checksum);
-
+//
 if ($AuthDesc === "Success") {
 	//Successful Transaction
 	//send generate username password and send sms
 
 	//if valid sessions present
-	if ($segment->get('user_plan') != '' && $segment->get('phone_number') != '') {
+	if ($segment->get('user_plan') != '' && $segment->get('phone_number') != '' && $segment->get('pin') != '') {
 
 		$phone_number = $segment->get('phone_number');
 		$plan = $capsule::table('couponplans')
@@ -73,61 +73,64 @@ if ($AuthDesc === "Success") {
 		//generate a username and password
 
 		//get all the usernames in account
-		$usernames = $capsule::table('radcheck')
-			->select('username')
-			->get();
-		$current_users = array();
-		foreach ($usernames as $users) {
-			array_push($current_users, $users['username']);
-		}
+		// $usernames = $capsule::table('radcheck')
+		// 	->select('username')
+		// 	->get();
+		// $current_users = array();
+		// foreach ($usernames as $users) {
+		// 	array_push($current_users, $users['username']);
+		// }
 
-		//generate a unique username
-		$username = $generator->generateString(6, $pasword_characters);
-		while (in_array($username, $current_users)) {
-			$username = $generator->generateString(6, $pasword_characters);
-		}
-		$password = $generator->generateString(6, $pasword_characters);
+		// //generate a unique username
+		// $username = $generator->generateString(6, $pasword_characters);
+		// while (in_array($username, $current_users)) {
+		// 	$username = $generator->generateString(6, $pasword_characters);
+		// }
+		// $password = $generator->generateString(6, $pasword_characters);
 
 		//add username and password , groupname
 		//
-		$rad_insert = $capsule::table('radcheck')
-			->insert(array(
-				'username' => $username,
-				'attribute' => 'Cleartext-Password',
-				'op' => ':=',
-				'value' => $password,
-			));
+		// $rad_insert = $capsule::table('radcheck')
+		// 	->insert(array(
+		// 		'username' => $username,
+		// 		'attribute' => 'Cleartext-Password',
+		// 		'op' => ':=',
+		// 		'value' => $password,
+		// 	));
 
-		$usergrp_insert = $capsule::table('radusergroup')
-			->insert(array(
-				'username' => $username,
-				'groupname' => $plan['planname'],
-				'priority' => '0',
-			));
+		// $usergrp_insert = $capsule::table('radusergroup')
+		// 	->insert(array(
+		// 		'username' => $username,
+		// 		'groupname' => $plan['planname'],
+		// 		'priority' => '0',
+		// 	));
 
-		if ($rad_insert && $usergrp_insert) {
-			//send username and password thru sms
-			//
+		//modify the temp plan with userselected paln
 
+		$rad_update = $capsule::table('radusergroup')
+			->where('username', $segment->get('pin'))
+			->update(['groupname' => 'planname']);
+
+		if ($rad_update) {
 			$segment->set('payment_status', 'success');
-			header('Location: ' . Config::$site_url . 'transaction-success.php?username=' . $username . '&password=' . $password);
+			header('Location: ' . Config::$site_url . 'transaction-success.php');
 		}
 
 	} else {
 		header('Location: ' . Config::$site_url);
 	}
 
-	echo 'success';
-
 } elseif ($AuthDesc === "Aborted") {
 	//Pending Transaction
-	echo 'Canceled';
+	$segment->set('payment_status', 'Transacation Aborted');
+	header('Location: ' . Config::$site_url . 'transaction-failed.php');
 
 } elseif ($AuthDesc === "Failure") {
 	//Failed Transaction
 	//Redirect to check-out page
 
-	echo 'failed';
+	$segment->set('payment_status', 'Transacation Failed');
+	header('Location: ' . Config::$site_url . 'transaction-failed.php');
 
 } else {
 	echo 'something wrong in : server response = ' . $AuthDesc;

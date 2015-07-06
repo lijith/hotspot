@@ -4,14 +4,14 @@
 include_once "../vendor/autoload.php";
 include_once "settings.php";
 
-$last_sms_delivery = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $segment->get('access_code_sent_time'));
+$last_sms_delivery = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $segment->get('pin_generate_time'));
 $diff = $last_sms_delivery->diffInSeconds(\Carbon\Carbon::now(), false);
 
 if ($diff > 120) {
 	//check phone number and access code present
-	if ($segment->get('phone_number') != '' && $segment->get('access_code') != '') {
+	if ($segment->get('phone_number') != '' && $segment->get('pin') != '') {
 
-		$access_key = $segment->get('access_code');
+		$pin = $segment->get('pin');
 
 		//send access code by SMS
 
@@ -22,18 +22,18 @@ if ($diff > 120) {
 		$getQuery .= '&route=' . getenv('ROUTE');
 		$getQuery .= '&tempid=' . 36978;
 		$getQuery .= '&mobile=' . $segment->get('phone_number');
-		$getQuery .= '&message=' . urlencode(' Dear customer your access code is ' . $access_key . '.Thank You.');
+		$getQuery .= '&message=' . urlencode(' Dear customer your access code is ' . strtoupper($pin) . '.Thank You.');
 		$getQuery .= '&pushid=' . getenv('PUSHID');
 
 		$client = new GuzzleHttp\Client(['base_uri' => 'http://www.smsalertbox.com/api/sms.php']);
 		$response = $client->get($getQuery);
 
-		$segment->set('access_code_sent_time', \Carbon\Carbon::now());
+		$segment->set('pin_generate_time', \Carbon\Carbon::now());
 
-		$segment->setFlash('message', 'Access code is sent');
+		$segment->setFlash('message', 'PIN is sent');
 
 		//redirect to plan selection
-		header('Location: ' . Config::$site_url . 'verify-mobile-user.php');
+		header('Location: ' . Config::$site_url . 'temp-login.php');
 
 	} else {
 

@@ -2,7 +2,7 @@
 
 	<div class="sign-up">
 
-		<h2 class="form-signin-heading">Verify Access code</h2>
+		<h2 class="form-signin-heading">Sign Up</h2>
 
 		<div class="form-wrap">
 			<div class="sign-up-form">
@@ -21,14 +21,15 @@
 
 					</div><!-- /.notification error -->
 				<?php endif; ?>
-				<form method="POST" action="">
-					<input type="text" name="access-code" autofocus="" placeholder="access code here" class="form-control" autocomplete="off" >
+				<p>
+					A 6 digit PIN is send to you phone. Please use it to login for Wifi access.
 
-					<button type="submit" class="btn btn-lg btn-login btn-block">Verify</button>
-				</form>
-				<p><small>Enter Access Code</small></p>
-				<p><a href="<?php echo $site_url; ?>resend-access-code.php" class="btn btn-default">Resend Access Code</a> </p>
-				<p>Access Code is send to your mobile by SMS. If you haven't received SMS please press Resend Access Code</p>
+				</p>
+				<p><a href="<?php echo $site_url; ?>user-select-plan.php" class="btn btn-danger">Login</a></p>
+				<hr />
+
+				<p>If you haven't received SMS please press Resend Access Code</p>
+				<p><a href="<?php echo $site_url; ?>resend-access-code.php" class="btn btn-primary">Resend Access Code</a> </p>
 			</div><!-- /.sign-up-form -->
 
 

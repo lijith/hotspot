@@ -10,8 +10,9 @@ $data = array(
 	'name' => 'Sign-Up',
 	'flash' => $segment->getFlash('message'),
 	'errors' => $err,
-	'username' => $_GET['username'],
-	'password' => $_GET['password'],
+
 );
+
+$session->destroy();
 
 echo $blade->view()->make('sign-up.success', $data);

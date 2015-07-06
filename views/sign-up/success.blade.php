@@ -9,14 +9,14 @@
 
 				<div class="alert alert-success fade in">
 					<h4><i class="icon-ok-sign"></i>Success!</h4>
-					<p>Transaction done Successfully</p>
+					<p>
+					Transaction done Successfully<br />
+					Thank you for the payment made.
+					</p>
 				</div><!-- /.notification error -->
 				<div class="alert alert-warning fade in">
-					<h4>username : {{ $username }}</h4>
-					<h4>password : {{ $password }}</h4>
 					<p>
-						Use this username and password <br />
-						Click Login Here button below to continue
+						Use the PIN to access the Wifi.
 					</p>
 				</div><!-- /.notification error -->
 

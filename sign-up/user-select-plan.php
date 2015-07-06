@@ -15,7 +15,7 @@ include_once "settings.php";
 // 	->get();
 
 //check if a phone number is set
-if ($segment->get('phone_number') != '' && $segment->get('verified') === true) {
+if ($segment->get('phone_number') != '' && $segment->get('pin') != '') {
 	$oval_plans = $capsule::table('couponplans')
 		->where('price', '>', 0)
 		->orderBy('price', 'ASC')

@@ -9,11 +9,9 @@
 			@if(!empty($errors))
 
 				<div class="alert alert-block alert-danger fade in">
-					<ul>
-					@foreach($errors as $error)
-						<li>{{$error}}</li>
-					@endforeach
-					</ul>
+					<p>
+						{{ $flash }}
+					</p>
 				</div><!-- /.notification error -->
 				<p>
 					<a href="" class="btn btn-primary  btn-sm">Try Again</a>
