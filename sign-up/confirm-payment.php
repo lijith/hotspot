@@ -44,7 +44,7 @@ for ($i = 0; $i < $dataSize; $i++) {
  *
  * non encrypted response
  *
- * */
+ */
 // $MerchantId = $_POST['Merchant_Id'];
 // $OrderId = $_POST['Order_Id'];
 // $Amount = $_POST['Amount'];
@@ -109,11 +109,20 @@ if ($AuthDesc === "Success") {
 
 		$rad_update = $capsule::table('radusergroup')
 			->where('username', $segment->get('pin'))
-			->update(['groupname' => 'planname']);
+			->update(['groupname' => $plan['planname']]);
 
-		if ($rad_update) {
+		$userinfo = $capsule::table('userinfo')
+			->insert(array(
+				'username' => $segment->get('pin'),
+				'mobilephone' => $segment->get('phone_number'),
+				'creationdate' => \Carbon\Carbon::now(),
+			));
+
+		if ($rad_update && $userinfo) {
 			$segment->set('payment_status', 'success');
 			header('Location: ' . Config::$site_url . 'transaction-success.php');
+		} else {
+			echo 'something went wrong on db operation :(';
 		}
 
 	} else {
