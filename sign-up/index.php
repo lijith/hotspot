@@ -83,6 +83,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					'priority' => '0',
 				));
 
+			$userinfo = $capsule::table('userinfo')
+				->insert(array(
+					'username' => $pin,
+					'mobilephone' => $segment->get('phone_number'),
+					'creationdate' => \Carbon\Carbon::now(),
+				));
+
 			//to login link, resend pin page
 			header('Location: ' . Config::$site_url . 'temp-login.php');
 

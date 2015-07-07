@@ -111,14 +111,7 @@ if ($AuthDesc === "Success") {
 			->where('username', $segment->get('pin'))
 			->update(['groupname' => $plan['planname']]);
 
-		$userinfo = $capsule::table('userinfo')
-			->insert(array(
-				'username' => $segment->get('pin'),
-				'mobilephone' => $segment->get('phone_number'),
-				'creationdate' => \Carbon\Carbon::now(),
-			));
-
-		if ($rad_update && $userinfo) {
+		if ($rad_update) {
 			$segment->set('payment_status', 'success');
 			header('Location: ' . Config::$site_url . 'transaction-success.php');
 		} else {
