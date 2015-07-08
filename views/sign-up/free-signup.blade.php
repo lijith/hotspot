@@ -17,8 +17,8 @@
 						</ul>
 					</div><!-- /.notification error -->
 				@endif
-				<form method="POST" action="">
-					<input type="text" name="phone-number" autofocus="" placeholder="phone number" class="form-control" autocomplete="off" value="{{ $form_data['phone-number'] }}">
+				<form method="POST" action="" id="myform">
+					<input type="tel" name="phone-number" autofocus="" placeholder="phone number" class="form-control phone-number" autocomplete="off" value="{{ $form_data['phone-number'] }}">
 
 					<button type="submit" class="btn btn-lg btn-login btn-block">Sign Up</button>
 				</form>

@@ -39,5 +39,11 @@
 
 </section>
 <!--main content end-->
+<script src="../js/jquery.js"></script>
+<script src="../js/jquery.validate.min.js"></script>
+<script src="../js/additional-methods.min.js"></script>
+<!--common script init for all pages-->
+<script src="../js/scripts.js"></script>
+
 </body>
 </html>

@@ -219,7 +219,8 @@
 <script type="text/javascript" src="js/data-tables/DT_bootstrap.js"></script>
 
 <script type="text/javascript" src="js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-
+<script src="js/jquery.validate.min.js"></script>
+<script src="js/additional-methods.min.js"></script>
 <!--common script init for all pages-->
 <script src="js/scripts.js"></script>
 
