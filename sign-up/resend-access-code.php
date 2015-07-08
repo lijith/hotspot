@@ -40,12 +40,11 @@ if ($diff > 120) {
 		$session->destroy();
 		header('Location: ' . Config::$site_url);
 	}
-	//redirect to plan selection
-	header('Location: ' . Config::$site_url . 'verify-mobile-user.php');
+
 } else {
 	$wait = \Carbon\Carbon::now()->diffInSeconds($last_sms_delivery->addSeconds(120), false);
 	$segment->setFlash('message', 'Wait ' . $wait . ' secs and retry');
-	header('Location: ' . Config::$site_url . 'verify-mobile-user.php');
+	header('Location: ' . Config::$site_url . 'temp-login.php');
 }
 
 //http://www.smsalertbox.com/api/sms.php
