@@ -58,9 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$getQuery .= '&pin=' . getenv('PIN');
 			$getQuery .= '&sender=' . getenv('SENDER');
 			$getQuery .= '&route=' . getenv('ROUTE');
-			$getQuery .= '&tempid=' . 36978;
+			$getQuery .= '&tempid=' . 37983;
 			$getQuery .= '&mobile=' . $_POST['phone-number'];
-			$getQuery .= '&message=' . urlencode('Dear customer your access code is ' . strtoupper($pin) . '.Thank You.');
+			$getQuery .= '&message=' . urlencode('Dear customer your access PIN is ' . strtoupper($pin) . '. Thank you. Effinity Infosec Pvt. Ltd.');
 			$getQuery .= '&pushid=' . getenv('PUSHID');
 
 			$client = new GuzzleHttp\Client(['base_uri' => 'http://www.smsalertbox.com/api/sms.php']);
