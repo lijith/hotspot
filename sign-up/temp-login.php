@@ -7,6 +7,7 @@ include_once "settings.php";
 $form_data = array(
 	'phone-number' => '',
 );
+
 //check phone number and access code present
 if ($segment->get('phone_number') != '' && $segment->get('pin') != '') {
 

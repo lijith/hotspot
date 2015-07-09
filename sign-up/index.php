@@ -10,8 +10,15 @@ $form_data = array(
 
 $current_pins = array();
 
-if ($segment->get('access_code_sent_time') != '') {
-	header('Location: ' . Config::$site_url . 'verify-mobile-user.php');
+if ($segment->get('user_register_time') != '') {
+
+	$last_sms_delivery = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $segment->get('pin_generate_time'));
+	$diff = $last_sms_delivery->diffInSeconds(\Carbon\Carbon::now(), false);
+	if ($diff < 1800) {
+		$segment->setFlash('message', 'Login or Resend PIN');
+		header('Location: ' . Config::$site_url . 'temp-login.php');
+	}
+
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -51,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 			//save pin, and generate time to session
 			$segment->set('pin_generate_time', \Carbon\Carbon::now());
+			$segment->set('user_register_time', \Carbon\Carbon::now());
 			$segment->set('pin', $pin);
 
 			$getQuery = 'http://www.smsalertbox.com/api/sms.php?';
