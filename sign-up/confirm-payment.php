@@ -135,5 +135,6 @@ if ($AuthDesc === "Success") {
 	header('Location: ' . Config::$site_url . 'transaction-failed.php');
 
 } else {
-	echo 'something wrong in : server response = ' . $AuthDesc;
+	$segment->set('payment_status', 'Unknown Transaction State');
+	header('Location: ' . Config::$site_url . 'transaction-failed.php');
 }
